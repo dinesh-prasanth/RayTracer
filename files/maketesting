@@ -1,0 +1,38 @@
+#makefile for execution of testing file
+testing: testing.o Physics.o Vector.o Point.o Color.o Line.o Lineseg.o Rayseg.o Ray.o Sphere.o Object.o intersection.o Screengl.o functions.o Plane.o Cuboid.o
+	g++ -o testing testing.o Physics.o Vector.o Point.o Color.o Line.o Lineseg.o Rayseg.o Ray.o Sphere.o Object.o intersection.o Screengl.o functions.o Plane.o Cuboid.o -I /usr/include/GL/ -L /usr/include/GL/ -lglut -lGL -lGLU -lX11
+
+testing.o: testing.cpp Physics.h Vector.h Point.h Color.h Line.h Lineseg.h Rayseg.h Ray.h Sphere.h Object.h intersection.h Screengl.h functions.h Plane.h Cuboid.h
+	g++ -c testing.cpp
+Physics.o: Physics.cpp Physics.h Plane.h
+	g++ -c Physics.cpp
+Vector.o: Vector.cpp Vector.h
+	g++ -c Vector.cpp
+Point.o: Point.cpp Point.h Vector.h functions.h Line.h
+	g++ -c Point.cpp
+Color.o: Color.o Color.cpp
+	g++ -c Color.cpp
+Line.o: Line.cpp Line.h Vector.h
+	g++ -c Line.cpp
+Lineseg.o: Lineseg.cpp Lineseg.h Point.h
+	g++ -c Lineseg.cpp
+Rayseg.o: Rayseg.h Rayseg.cpp Lineseg.h Color.h
+	g++ -c Rayseg.cpp
+Ray.o: Ray.cpp Ray.h Color.h Line.h
+	g++ -c Ray.cpp
+Sphere.o: Sphere.h Sphere.cpp Point.h Color.h
+	g++ -c Sphere.cpp
+Object.o: Object.cpp Object.h Sphere.h Plane.h Cuboid.h
+	g++ -c Object.cpp
+intersection.o: intersection.h intersection.cpp Object.h Line.h Point.h Vector.h Lineseg.h
+	g++ -c intersection.cpp
+Screengl.o: Screengl.cpp Screengl.o Color.h
+	g++ -c Screengl.cpp
+functions.o: functions.cpp functions.h Point.h
+	g++ -c functions.cpp
+Plane.o: Plane.cpp Plane.h Point.h Color.h
+	g++ -c Plane.cpp
+Cuboid.o: Cuboid.cpp Cuboid.h Plane.h Color.h
+	g++ -c Cuboid.cpp
+clean:
+	rm -rf *o maingl

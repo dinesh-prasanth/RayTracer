@@ -1,0 +1,34 @@
+#makefile for execution of main.cpp file
+main: main.o Physics.o Vector.o Point.o Color.o Line.o Lineseg.o Rayseg.o Ray.o Sphere.o Object.o intersection.o Screengl.o functions.o
+	g++ -o main main.o Physics.o Vector.o Point.o Color.o Line.o Lineseg.o Rayseg.o Ray.o Sphere.o Object.o intersection.o Screengl.o functions.o
+
+main.o: main.cpp Physics.h Vector.h Point.h Color.h Line.h Lineseg.h Rayseg.h Ray.h Sphere.h Object.h intersection.h Screengl.h functions.h
+	g++ -c main.cpp
+Physics.o: Physics.cpp Physics.h 
+	g++ -c Physics.cpp
+Vector.o: Vector.cpp Vector.h
+	g++ -c Vector.cpp
+Point.o: Point.cpp Point.h Vector.h functions.h Line.h
+	g++ -c Point.cpp
+Color.o: Color.o Color.cpp
+	g++ -c Color.cpp
+Line.o: Line.cpp Line.h Vector.h
+	g++ -c Line.cpp
+Lineseg.o: Lineseg.cpp Lineseg.h Point.h
+	g++ -c Lineseg.cpp
+Rayseg.o: Rayseg.h Rayseg.cpp Lineseg.h Color.h
+	g++ -c Rayseg.cpp
+Ray.o: Ray.cpp Ray.h Color.h Line.h
+	g++ -c Ray.cpp
+Sphere.o: Sphere.h Sphere.cpp Point.h Color.h
+	g++ -c Sphere.cpp
+Object.o: Object.cpp Object.h Sphere.h
+	g++ -c Object.cpp
+intersection.o: intersection.h intersection.cpp Object.h Line.h Point.h Vector.h Lineseg.h
+	g++ -c intersection.cpp
+Screengl.o: Screengl.cpp Screengl.o Color.h
+	g++ -c Screengl.cpp
+functions.o: functions.cpp functions.h Point.h
+	g++ -c functions.cpp
+clean:
+	rm -rf *o main
