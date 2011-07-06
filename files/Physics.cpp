@@ -27,11 +27,40 @@ Vector reflect_sphere(Point i,Point o,Sphere s)
 		return out;
 		}
 	else{
-		cout<<"Error occurred in reflection calculation.";}
+		cout<<"Error occurred in reflection calculation of Sphere.";}
 }
 Vector reflect_plane(Point i,Point o,Plane p)
 {
-
+	Vector o_v = Vector(o.x,o.y,o.z);
+	Vector i_v = Vector(i.x,i.y,i.z);
+	Line in = Line(i_v,o_v);
+	Line l1 = Line(Vector(p.p1.x,p.p1.y,p.p1.z),Vector(p.p2.x,p.p2.y,p.p2.z));
+	Line l2 = Line(Vector(p.p1.x,p.p1.y,p.p1.z),Vector(p.p3.x,p.p3.y,p.p3.z));
+	Vector n_v = (l1.dvector()).cross(l2.dvector());
+	i_v = in.dvector();
+	i_v.normalize();
+	n_v.normalize();
+	double cos = -n_v.dot(i_v);
+	if(cos<0){
+		n_v = (l2.dvector()).cross(l1.dvector());
+		n_v.normalize();
+		cos = -n_v.dot(i_v);
+//		if(cos<0)
+//			cout<<cos<<endl;
+		goto l;
+		}
+	else if(cos>=0){
+		l:
+		Vector out;
+		out.x = i_v.x + (2.0*cos*n_v.x);
+		out.y = i_v.y + (2.0*cos*n_v.y);
+		out.z = i_v.z + (2.0*cos*n_v.z);
+//		if(i_v==out){cout<<"a";
+//			return Vector(0.0,0.0,0.0);}
+		return out;
+		}
+//	else{//cout<<cos<<endl;
+//		cout<<"Error occurred in reflection calculation of Plane.";}
 }
 Vector refract_sphere(Point i,Point o,Sphere s,double n1,double n2)
 {	

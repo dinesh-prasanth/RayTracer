@@ -17,6 +17,43 @@ using namespace std;
 Point zero_p = Point(0.0,0.0,0.0);
 Color zero_c = Color(0.0,0.0,0.0);
 
+Point closest_int(Point p,Vector r_d,Object ob,double &min_in_l,Color &tmp_c,Sphere &tmp_s,Plane &tmp_p){	//closest intersection with object data structure
+
+double in_l = 0.0;	// temperory intersection length
+Point in_p,min_in_p;
+
+for(int k=0;k<ob.s.size();k++){	// Loop for finding minimum intersection point from all spheres
+	Sphere sp = ob.s[k];
+	in_p = ray_sphere(p,r_d,sp,in_l);	//intersection point
+	if(in_p!=zero_p){//cout<<"1";
+		if(in_l<min_in_l){cout<<min_in_l<<endl;
+			min_in_l = in_l;
+			min_in_p = in_p;
+			tmp_c = ob.s[k].c;
+			tmp_s = ob.s[k];
+			}
+		}
+	}
+
+for(int k=0;k<ob.p.size();k++){//Loop for finding minimum intersection point from all planes
+	Plane pl = ob.p[k];
+	in_p = ray_plane(p,r_d,pl,in_l);
+	if(in_p!=zero_p){//cout<<in_p.out()<<min_in_l;
+		if((in_l<min_in_l)&&(in_l>=0.000001)){cout<<endl<<"Length : "<<in_l<<"|"<<min_in_l<<endl;
+			min_in_l = in_l;
+			min_in_p = in_p;
+			tmp_c = ob.p[k].c;
+//			cout<<ob.p[k].out()<<endl;
+			tmp_p = ob.p[k];
+			}
+		}
+	}
+
+return min_in_p;
+}
+
+
+
 Point closest_ref(Point p,Vector r_d,Object ob,double &min_in_l,Color &tmp_c,Sphere &tmp_s){	//closest intersection with object data structure
 
 double in_l = 0.0;	// temperory intersection length
@@ -150,12 +187,32 @@ int main(){
 	Point p19 = Point(3.0,0.0,0.0);
 //	Sphere s8 = Sphere(p19,1.0,Color(1.0,0.3,0.0),0.3);
 //	Color c1 = shade_sphere(p18,p17,s8);
-//	cout<<"Brightness change : "<<s8.c.out()<<" : "<<c1.out()<<endl;*/
+//	cout<<"Brightness change : "<<s8.c.out()<<" : "<<c1.out()<<endl;
 	cout<<endl<<"TESTING FOR PLANE INTERSECTION\n";
 	Vector v = Vector(1.0,1.0,1.0);
 	Point p = Point(0.0,0.0,0.0);
 	Plane P = Plane( Point(0.0,0.0,2.0) , Point(2.0,0.0,2.0) , Point(2.0,2.0,2.0) , Point(0.0,2.0,2.0) );
-	Point in = ray_plane(p,v,P);cout<<endl<<in.out()<<endl;
+	Point in = ray_plane(p,v,P);cout<<endl<<in.out()<<endl;*/
+Object ob;	
+ob.push(Plane(Point(0.0,0.0,0.0),Point(0.0,0.0,120.0),Point(110.0,0.0,120.0),Point(110.0,0.0,0.0),Color(1.0,1.0,1.0),1.5));
+ob.push(Cuboid(Point(30.0,0.0,20.0),Point(20.0,0.0,30.0),Point(10.0,0.0,20.0),Point(20.0,0.0,10.0),Point(30.0,50.0,20.0),Point(20.0,50.0,30.0),Point(10.0,50.0,20.0),Point(20.0,50.0,10.0),Color(1.0,0.0,0.0)));
+
+ob.push(Sphere(Point(60.0,30.0,50.0),10.0,Color(1.0,1.0,0.0),1.0,1.5));
+ob.push(Sphere(Point(60.0,60.0,60.0),10.0,Color(1.0,1.0,0.0),1.0,1.5));
+// cuboid near the main cuboid
+ob.push(Cuboid(Point(10.0,0.0,10.0),Point(10.0,0.0,30.0),Point(30.0,0.0,30.0),Point(30.0,0.0,10.0),Point(15.0,15.0,15.0),Point(15.0,15.0,25.0),Point(25.0,15.0,25.0),Point(25.0,15.0,15.0),Color(0.0,0.0,1.0)));
+//	cuboid near the sphere
+ob.push(Cuboid(Point(40.0,0.0,40.0),Point(40.0,0.0,60.0),Point(60.0,0.0,60.0),Point(60.0,0.0,40.0),Point(35.0,30.0,35.0),Point(35.0,30.0,65.0),Point(65.0,30.0,65.0),Point(65.0,30.0,35.0),Color(0.0,1.0,1.0)));
+
+
+
+	Point min_in_p = Point( 15.0, 0.0 , 39.2405 );
+	Vector ref_v = Vector(0.0 , 1.0 , 0.1 );
+	double min_ref_l=1000.0;Color ref_c;Sphere ref_s;Plane ref_p;
+	Point min_ref_p = closest_int(min_in_p,ref_v,ob,min_ref_l,ref_c,ref_s,ref_p);
+	cout<<min_ref_p.out()<<ref_c.out()<<endl;
+
+
 	return 0;
 }
 

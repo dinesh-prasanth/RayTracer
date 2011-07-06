@@ -69,6 +69,10 @@
 		z = -z;
 		return (*this);
 		}
+
+	Vector Point :: vector(){
+		return Vector(x,y,z);
+		}
 	// function for finding if passed point is lying in the same direction of passed vector from this point as starting point
 	bool Point :: isdirection(Vector v,Point t){	// direction vector | testing point passed
 		Vector t_v = Vector(t.x,t.y,t.z);

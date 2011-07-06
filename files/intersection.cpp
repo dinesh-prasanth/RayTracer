@@ -163,7 +163,8 @@ Point ray_plane(Point p,Vector dr,Plane l,double &len){		// (p0 - i0).n / (i.n)
 		t2 = Vector(l.p1.x-l.p4.x,l.p1.y-l.p4.y,l.p1.z-l.p4.z);
 //		cout<<t1.out()<<t2.out()<<endl;
 //		cout<<endl<<in.out();
-		len = p.length(Point(in.x,in.y,in.z));
+		if(p.vector() != in)
+			len = p.length(Point(in.x,in.y,in.z));
 		t1.cross(e1);
 		t2.cross(e1);
 //		cout<<t1.out()<<t2.out()<<endl<<t1.dot(t2)<<endl;

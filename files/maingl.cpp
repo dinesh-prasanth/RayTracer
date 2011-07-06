@@ -73,15 +73,17 @@ for(int k=0;k<ob.p.size();k++){//Loop for finding minimum intersection point fro
 	Plane pl = ob.p[k];
 	in_p = ray_plane(p,r_d,pl,in_l);
 	if(in_p!=zero_p){
-		if(in_l<min_in_l){
+//		if((in_l<min_in_l)){
+		if((in_l<min_in_l)&&(in_l>=0.000001)){//cout<<endl<<"Length : "<<in_l<<"|"<<min_in_l;
 			min_in_l = in_l;
 			min_in_p = in_p;
-			tmp_c = ob.p[k].c;
+			tmp_c = ob.p[k].c;//cout<<"|"<<min_in_l<<"|"<<p.out()<<min_in_p.out()<<endl;
 //			cout<<ob.p[k].out()<<endl;
 			tmp_p = ob.p[k];
 			}
 		}
 	}
+
 return min_in_p;
 }
 Point closest_int(Point p,Vector r_d,Object ob,double &min_in_l,Color &tmp_c,Sphere &tmp_s){	//closest intersection with object data structure
@@ -284,32 +286,47 @@ for(int i=0;i<s_x;i++)
 
 			/*Reflection call starts*/
 			if( tmp_p != zero_P )
-				{}
+				{
+				Sphere ref_s;Plane ref_p;double min_ref_l = infy;
+				Vector ref_v = reflect_plane(p,min_in_p,tmp_p);
+				/*Line l1 = Line(min_in_p.vector(),p.vector());
+				Vector l1_v = l1.dvector();
+				l1_v.normalize();
+				cout<<tmp_p.out()<<l1_v.out()<<ref_v.out()<<endl;*/
+				Point min_ref_p = closest_int(min_in_p,ref_v,ob,min_ref_l,ref_c,ref_s,ref_p);
+				//cout<<"L : "<<min_ref_l<<endl<<min_in_p.out()<<tmp_p.out()<<ref_v.out()<<min_ref_p.out()<<ref_p.out()<<endl;
+				if(min_ref_p != zero_p && min_ref_l != infy && ref_c != zero_c){
+					smp_c = tmp_c;
+					ref_c.alter(ref_cff);
+					smp_c.alter(1-ref_cff);
+					tmp_c = ref_c + smp_c;
+					}
+				}
 			else{
-			ref_c = rec_ref(p,min_in_p,ref_c,ob,tmp_s,ref_p,ref_depth);	// function call for recursive reflection to find color
-			if( ref_c != zero_c)
-				ref_c.alter(ref_cff);
-			smp_c.alter(1-ref_cff);
-			tmp1_c = ref_c + smp_c;
-			/*Reflection ends here*/
+				ref_c = rec_ref(p,min_in_p,ref_c,ob,tmp_s,ref_p,ref_depth);	// function call for recursive reflection to find color
+				if( ref_c != zero_c)
+					ref_c.alter(ref_cff);
+				smp_c.alter(1-ref_cff);
+				tmp1_c = ref_c + smp_c;
+				/*Reflection ends here*/
 			
 
-			rfr_c = rec_rfr(p,min_in_p,rfr_c,ob,tmp_s,rfr_depth);
-			rfr_c.alter(1-org_s.a);
-			org_c.alter(org_s.a);
-			tmp2_c = org_c + rfr_c;
+				rfr_c = rec_rfr(p,min_in_p,rfr_c,ob,tmp_s,rfr_depth);
+				rfr_c.alter(1-org_s.a);
+				org_c.alter(org_s.a);
+				tmp2_c = org_c + rfr_c;
 
-			if(tmp1_c!=zero_c&&tmp2_c!=zero_c)
-			{
-				//tmp1_c.alter(org_s.a);
-				//tmp2_c.alter(1-org_s.a);
-				tmp_c = ref_c + rfr_c;
-			}
-			else if(tmp1_c!=zero_c)
-				tmp_c=tmp1_c;
-			else if(tmp2_c!=zero_c)
-				tmp_c=tmp2_c;
-			}
+				if(tmp1_c!=zero_c&&tmp2_c!=zero_c)
+					{
+					//tmp1_c.alter(org_s.a);
+					//tmp2_c.alter(1-org_s.a);
+					tmp_c = ref_c + rfr_c;
+					}
+				else if(tmp1_c!=zero_c)
+					tmp_c=tmp1_c;
+				else if(tmp2_c!=zero_c)
+					tmp_c=tmp2_c;
+				}
 			/*Shadow check and Phong lightning call starts*/
 			if(shadow_check(min_in_p,light,ob)){	//Loop for checking if the point is in shadow region
 				tmp_c.alter(0.15);		//Ambient coefficient

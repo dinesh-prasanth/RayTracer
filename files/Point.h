@@ -60,6 +60,7 @@ public:
 	Vector operator-(const Point& p);
 	Point operator- (const Vector& v);
 	Point operator- ();
+	Vector vector();
 	// function for finding if passed point is lying in the same direction of passed vector from this point as starting point
 	bool isdirection(Vector v,Point t);	// direction vector | testing point passed
 	double length(const Point p);
